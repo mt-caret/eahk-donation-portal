@@ -1,8 +1,615 @@
-html {
-  color-scheme: light dark;
-  font-family: system-ui;
+/* Set up Theme colours */
+:root {
+  --eaa-blue-100: #edf4f6;
+  --eaa-blue-200: #dcebef;
+  --eaa-blue-600: #1592a5;
+  --eaa-blue-700: #187485;
+
+  --gray-100: #e7e7e7;
+  --gray-200: #d1d1d1;
+}
+
+/* Fix bug where cleantalk honeypot field shows up */
+.apbct_special_field {
+  display: none;
+}
+
+/* Animations */
+* {
+  transition-property: color, background-color, border-color,
+    text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
+    backdrop-filter, display;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 250ms;
+  box-sizing: border-box;
+  /* This is a new widely available properly that lets you animate `display: none` */
+  transition-behavior: allow-discrete;
+}
+
+@starting-style {
+  * {
+    opacity: 0;
+  }
+}
+
+/* Buttons */
+button {
+  background-color: var(--eaa-blue-600);
+  font-weight: 700;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: var(--eaa-blue-700);
+}
+
+/* Links */
+a {
+  color: var(--eaa-blue-600);
+}
+
+/* Fieldset - these allow you to group inputs to enable or disable multiple at once */
+fieldset {
+  padding: 0;
+  border: none;
+  margin: 0;
+}
+
+/* Form Validation - shows tick or alert badges based on validity of input */
+.validate input:user-valid,
+input:user-valid.validate {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 12 12'><path d='M6 0a6 6 0 1 0 6 6 6 6 0 0 0-6-6zm-.5 8.5L3 5.85l.7-.71 1.79 1.86L8.77 3.5 9.5 4.2z' fill='%2336B075'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center right 0.5rem;
+}
+
+.validate input:user-invalid,
+input:user-invalid.validate {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 12 12'><path d='M6 12a6 6 0 100-12 6 6 0 000 12zm0-4.8a.45.45 0 01-.45-.45V3.45a.45.45 0 01.9 0v3.3A.45.45 0 016 7.2zm-.002 1.8a.6.6 0 110-1.2.6.6 0 010 1.2z' fill='%23FFB800'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center right 0.5rem;
+}
+
+/* Base popover styling */
+.popover {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  padding: 32px;
+  max-width: 480px;
+  width: 90%;
+
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  z-index: 1000;
+}
+
+/* When popover is open */
+.popover.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Button styling */
+.more-info-button {
+  background-color: transparent;
+  border: 1px solid black;
+  border-radius: 100px;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 18px;
+  height: 18px;
+  color: black;
+  font-size: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.more-info-button:hover {
+  background-color: var(--eaa-blue-200);
+}
+
+/* Optional: Backdrop when popover is open */
+.popover-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 999;
+}
+
+/* Width */
+.w-full {
+  width: 100%;
+}
+
+/* Height */
+.h-12 {
+  height: 3rem;
+}
+
+.h-20 {
+  height: 5rem;
+}
+
+/* Padding */
+.p-2 {
+  padding: 0.5rem;
+}
+
+.py-5 {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+}
+
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.px-10 {
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+
+/* Margin bottom */
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+/* Margin top */
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mt-8 {
+  margin-top: 2rem;
+}
+
+/* Borders */
+.border {
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--eaa-blue-600);
+}
+
+.border-none {
+  border: none;
+}
+
+/* Focus outline */
+.focus-outline:focus,
+.focus-outline:focus-within {
+  outline-style: solid;
+  outline-offset: 1px;
+  outline-width: 2px;
+  outline-color: var(--eaa-blue-600);
+}
+
+/* Flex */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+.items-end {
+  align-items: flex-end;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.self-stretch {
+  align-self: stretch;
+}
+
+/* Text sizes */
+.text-sm {
+  font-size: 0.75rem;
+}
+
+.text-md {
+  font-size: 1rem;
+}
+
+.text-lg {
+  font-size: 1.25rem;
+}
+
+/* Text colors */
+.text-white {
+  color: white;
+}
+
+.text-blue {
+  color: var(--eaa-blue-700);
+}
+
+/* Border rounding */
+.rounded-sm {
+  border-radius: 0.25rem;
+}
+
+.rounded-full {
+  border-radius: calc(infinity * 1px);
+}
+
+/* Display */
+.inline-block {
+  display: inline-block;
+}
+
+.block {
+  display: block;
+}
+
+/* Prevent resizing of textarea use normal font*/
+textarea {
+  resize: none;
+  font-family: inherit;
+}
+
+/* Remove arrow spinners on number inputs */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Custom Radio Button Groups */
+.radio-group input[type="radio"] {
+  /* We don't completely remove this so that we can keep keyboard accessibility */
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+}
+
+.radio-group input[type="radio"]+label {
+  flex-grow: 1;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--eaa-blue-600);
+  text-align: center;
+  cursor: pointer;
+}
+
+.radio-group input:not([disabled])[type="radio"]:focus+label {
+  outline: 2px solid var(--eaa-blue-600);
+  outline-offset: 1px;
+}
+
+.radio-group input[type="radio"]:checked+label {
+  background-color: var(--eaa-blue-600);
+  color: white;
+}
+
+/* Custom Select Dropdowns */
+.eaa-select {
+  /* Safari adds gloss which can only be removed with -webkit-appearance: none; but this removes the arrows. We add the arrows back with an svg background */
+  background: url(data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0Ljk1IDEwIj4KICAgIDxkZWZzPgogICAgICAgIDxzdHlsZT4uY2xzLTF7ZmlsbDojZmZmO30uY2xzLTJ7ZmlsbDojNDQ0O308L3N0eWxlPgogICAgPC9kZWZzPgogICAgPHRpdGxlPmFycm93czwvdGl0bGU+CiAgICA8cmVjdCBjbGFzcz0iY2xzLTEiIHdpZHRoPSI0Ljk1IiBoZWlnaHQ9IjEwIi8+CiAgICA8cG9seWdvbiBjbGFzcz0iY2xzLTIiIHBvaW50cz0iMy41NCA0LjMzIDIuNDggNS44MiAxLjQxIDQuMzMgMy41NCA0LjMzIi8+Cjwvc3ZnPg==) no-repeat 99% 50%;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  border: 1px solid var(--eaa-blue-600);
+  cursor: pointer;
+}
+
+/* Custom Checkboxes */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: var(--gray-100);
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.eaa-checkbox {
+  position: relative;
+  padding-left: 35px;
+  user-select: none;
+  min-height: 25px;
+  cursor: pointer;
+}
+
+.eaa-checkbox input {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
+.eaa-checkbox:hover input:not(:checked)~.checkmark {
+  background-color: var(--gray-200);
+}
+
+.eaa-checkbox input:checked~.checkmark {
+  background-color: var(--eaa-blue-600);
+}
+
+.eaa-checkbox input:checked~.checkmark:after {
+  display: block;
+}
+
+.eaa-checkbox .checkmark:after {
+  left: 8px;
+  top: 2px;
+  width: 6px;
+  height: 14px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+.eaa-checkbox:focus-within .checkmark {
+  outline: 2px solid var(--eaa-blue-600);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* Speech bubble for donation frequency */
+.speech-bubble {
+  position: relative;
+  background: transparent;
+  border: 2px solid var(--eaa-blue-200);
+  border-radius: 10px;
+  padding: 8px 12px;
+  text-align: center;
+  color: #333;
+  background-color: var(--eaa-blue-100);
+  max-width: 50%;
+  font-size: small;
+  margin-left: auto;
+}
+
+.speech-bubble:after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  margin-left: -10px;
+  border-width: 10px 10px 0;
+  border-style: solid;
+  border-color: var(--eaa-blue-200) transparent transparent transparent;
+  rotate: 180deg;
+  background: transparent;
+}
+
+.speech-bubble:before {
+  content: '';
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  margin-left: -7px;
+  border-width: 7px 7px 0;
+  border-style: solid;
+  border-color: var(--eaa-blue-100) transparent transparent;
+  z-index: 1;
+  rotate: 180deg;
+  background: transparent;
+}
+
+@media screen and (max-width: 600px) {
+  .speech-bubble {
+    max-width: 100%;
+  }
+
+  .speech-bubble:after {
+    left: 75%;
+  }
+
+  .speech-bubble:before {
+    left: 75%;
+  }
+}
+
+/* Donation form host */
+.donation-form-host {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* Amplify impact section */
+.amplify-impact-section {
+  padding: 16px;
+  background-color: var(--eaa-blue-100);
+  border: 1px solid var(--eaa-blue-600);
+  border-radius: 1rem;
+  margin-top: 32px;
+}
+
+.amplify-impact-section h2 {
+  margin-top: 0;
+}
+
+.amplify-impact-section .custom-amount-input {
+  display: flex;
+  flex-grow: 1;
+  border: none;
+  background-color: transparent;
+  outline: none;
+  padding: 0.5rem 0.5rem 0.5rem 0.25rem;
+}
+
+.amplify-impact-section .custom-amount-input-wrapper {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  padding-left: 1rem;
+  width: 100%;
+  background-color: white;
+}
+
+/* Amount section */
+.amount-section .custom-amount-input {
+  display: flex;
+  flex-grow: 1;
+  border: none;
+  background-color: transparent;
+  outline: none;
+  padding: 1rem 0.5rem;
+}
+
+.amount-section .custom-amount-input-wrapper {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  padding-left: 1rem;
+  width: 100%;
+  background-color: white;
+  border: 2px solid var(--eaa-blue-600);
+}
+
+.amount-section .larger-button {
+  padding: 1rem 0;
+  border: 2px solid var(--eaa-blue-600);
+  font-size: 1.2rem;
+}
+
+/* Specific allocation section */
+.specific-allocation-section .charity-option {
+  justify-content: end;
+  align-items: center;
+  text-align: right;
+  padding-bottom: 0.5rem;
+}
+
+.specific-allocation-section .charity-option span {
+  margin: 0 0 0 1rem;
+  max-width: 7rem;
+  width: 100%;
+}
+
+.specific-allocation-section a {
+  text-decoration: none;
+}
+
+/* Total amount section */
+.total-amount-section table {
+  width: 100%;
+}
+
+.total-amount-section table td:nth-child(2) {
+  text-align: right;
+}
+
+.total-amount-section table tr:last-child {
+  font-weight: bold;
+}
+
+.total-amount-section table tr:nth-last-child(2) td {
+  padding-bottom: 0.5rem;
+}
+
+.total-amount-section table tr:last-child td:last-child {
+  font-size: 2rem;
+  padding: 1rem 0;
+}
+
+.total-amount-section .tax-deductible {
+  font-size: 0.8rem;
+  font-weight: normal;
+  color: #666;
+  margin-top: -1.5em;
+  line-height: 1;
+}
+
+.total-amount-section .total-donation {
+  line-height: 1;
+}
+
+/* Loader */
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top: 4px solid #198094;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
