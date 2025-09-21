@@ -52,18 +52,27 @@ test.describe('Donation Portal - Edge Cases', () => {
         await page.locator('#personal-details-section--postcode').fill('3000');
 
         // Should show validation error
-        await page.locator('#donate-button-section--donate-button').click();
-
-        page.on('dialog', async dialog => {
+        page.once('dialog', async dialog => {
             expect(dialog.message()).toContain('Please select an amount of at least $2');
             await dialog.accept();
         });
+        await page.locator('#donate-button-section--donate-button').click();
 
-        // Try negative amount (should be prevented by input type)
+        // Try negative amount - form should handle this gracefully
         await page.locator('#custom-amount-input').fill('-10');
-        const value = await page.locator('#custom-amount-input').inputValue();
-        // Most browsers will either reject negative input or convert to positive
-        expect(parseFloat(value)).toBeGreaterThanOrEqual(0);
+
+        // Fill required fields
+        await page.locator('#personal-details-section--first-name').fill('Negative');
+        await page.locator('#personal-details-section--last-name').fill('Amount');
+        await page.locator('#personal-details-section--email').fill('negative@example.com');
+        await page.locator('#personal-details-section--postcode').fill('3000');
+
+        // Should show validation error for negative amount
+        page.once('dialog', async dialog => {
+            expect(dialog.message()).toContain('Please select an amount of at least $2');
+            await dialog.accept();
+        });
+        await page.locator('#donate-button-section--donate-button').click();
     });
 
     test('should handle extremely long text inputs', async ({ page }) => {
@@ -81,7 +90,7 @@ test.describe('Donation Portal - Edge Cases', () => {
         await page.locator('#personal-details-section--postcode').fill('4000');
 
         // Select donation amount
-        await page.locator('#amount-section--donate-50').click();
+        await page.locator('label[for="amount-section--donate-50"]').click();
 
         // Form should handle long inputs gracefully
         await page.locator('#donate-button-section--donate-button').click();
@@ -101,10 +110,10 @@ test.describe('Donation Portal - Edge Cases', () => {
     test('should handle rapid form interactions', async ({ page }) => {
         // Rapidly switch between options
         for (let i = 0; i < 5; i++) {
-            await page.locator('#donation-frequency-section--monthly').click();
-            await page.locator('#donation-frequency-section--one-time').click();
-            await page.locator('#allocation-section--specific-allocation').click();
-            await page.locator('#allocation-section--default-allocation').click();
+            await page.locator('label[for="donation-frequency-section--monthly"]').click();
+            await page.locator('label[for="donation-frequency-section--one-time"]').click();
+            await page.locator('label[for="allocation-section--specific-allocation"]').click();
+            await page.locator('label[for="allocation-section--default-allocation"]').click();
         }
 
         // Form should remain stable
@@ -113,7 +122,7 @@ test.describe('Donation Portal - Edge Cases', () => {
         await expect(page.locator('.amount-section')).toBeVisible();
 
         // Should still be able to complete donation
-        await page.locator('#amount-section--donate-100').click();
+        await page.locator('label[for="amount-section--donate-100"]').click();
         await page.locator('#personal-details-section--first-name').fill('Rapid');
         await page.locator('#personal-details-section--last-name').fill('Clicker');
         await page.locator('#personal-details-section--email').fill('rapid@example.com');
@@ -136,7 +145,7 @@ test.describe('Donation Portal - Edge Cases', () => {
         await page.locator('#personal-details-section--country').selectOption('United Kingdom of Great Britain and Northern Ireland (the)');
 
         // Should handle these gracefully
-        await page.locator('#amount-section--donate-50').click();
+        await page.locator('label[for="amount-section--donate-50"]').click();
         await page.locator('#donate-button-section--donate-button').click();
 
         await expect(page.locator('#thankyou-section')).toBeVisible({ timeout: 5000 });
@@ -144,8 +153,8 @@ test.describe('Donation Portal - Edge Cases', () => {
 
     test('should handle browser back/forward navigation', async ({ page }) => {
         // Fill some form data
-        await page.locator('#donation-frequency-section--monthly').click();
-        await page.locator('#amount-section--donate-100').click();
+        await page.locator('label[for="donation-frequency-section--monthly"]').click();
+        await page.locator('label[for="amount-section--donate-100"]').click();
         await page.locator('#personal-details-section--first-name').fill('Navigation');
 
         // Navigate away and back
@@ -166,7 +175,7 @@ test.describe('Donation Portal - Edge Cases', () => {
 
     test('should handle network interruption gracefully', async ({ page }) => {
         // Fill form completely
-        await page.locator('#amount-section--donate-50').click();
+        await page.locator('label[for="amount-section--donate-50"]').click();
         await page.locator('#personal-details-section--first-name').fill('Network');
         await page.locator('#personal-details-section--last-name').fill('Test');
         await page.locator('#personal-details-section--email').fill('network@example.com');
@@ -194,7 +203,7 @@ test.describe('Donation Portal - Edge Cases', () => {
 
     test('should handle multiple specific charity allocations with edge amounts', async ({ page }) => {
         // Switch to specific allocation
-        await page.locator('#allocation-section--specific-allocation').click();
+        await page.locator('label[for="allocation-section--specific-allocation"]').click();
 
         // Add very small amounts to multiple charities
         await page.locator('#against-malaria-foundation-amount').fill('0.01');

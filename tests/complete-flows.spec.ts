@@ -113,21 +113,22 @@ test.describe('Donation Portal - Complete User Flows', () => {
     });
 
     test('Complete donation flow - Minimum valid amounts', async ({ page }) => {
-        // Test with minimum donation to meet $2 requirement
-        await formHelper.selectDonationAmount('custom', 1.82); // With 10% tip = $2.00
-
-        // Fill minimal required details
+        // Fill required personal details first
         await formHelper.fillBasicPersonalDetails({
             firstName: 'Min',
             lastName: 'User'
         });
 
-        // Skip tip to test exact minimum
+        // Test with amount below minimum ($1.50 with 0% tip = $1.50 < $2)
+        await formHelper.selectDonationAmount('custom', 1.50);
         await formHelper.selectTipAmount('percentage', 0);
 
         // This should fail validation (under $2)
+        page.once('dialog', async dialog => {
+            expect(dialog.message()).toContain('Please select an amount of at least $2');
+            await dialog.accept();
+        });
         await formHelper.submitForm();
-        await formHelper.expectValidationError('Please select an amount of at least $2');
 
         // Increase to meet minimum
         await formHelper.selectDonationAmount('custom', 2.00);
@@ -139,7 +140,7 @@ test.describe('Donation Portal - Complete User Flows', () => {
 
     test('Complete donation flow - Multiple charity allocations with complex calculations', async ({ page }) => {
         // Switch to specific allocation
-        await page.locator('#allocation-section--specific-allocation').click();
+        await page.locator('label[for="allocation-section--specific-allocation"]').click();
 
         // Add multiple small amounts that sum to valid total
         const charityAllocations = {
@@ -182,13 +183,13 @@ test.describe('Donation Portal - Complete User Flows', () => {
 
     test('Complete donation flow - Monthly recurring with all options', async ({ page }) => {
         // Select monthly donation
-        await page.locator('#donation-frequency-section--monthly').click();
+        await page.locator('label[for="donation-frequency-section--monthly"]').click();
 
         // Select preset amount
         await formHelper.selectDonationAmount(500);
 
         // Set high tip percentage
-        await formHelper.selectTipAmount('percentage', 25);
+        await formHelper.selectTipAmount('percentage', 30);
 
         // Fill comprehensive personal details
         await formHelper.fillBasicPersonalDetails({
@@ -215,7 +216,7 @@ test.describe('Donation Portal - Complete User Flows', () => {
         await expect(page.locator('.total-amount-section')).toContainText('(each month)');
 
         // Check total calculation
-        const expectedTotal = calculateTotalWithTip(500, 25);
+        const expectedTotal = calculateTotalWithTip(500, 30);
         await formHelper.expectTotalAmount(formatCurrency(expectedTotal));
 
         // Submit form
@@ -231,14 +232,20 @@ test.describe('Donation Portal - Complete User Flows', () => {
         // Start with invalid data
         await formHelper.selectDonationAmount('custom', 1); // Too low
 
-        // Try to submit with missing details
+        // Try to submit with missing details - should get amount error first
+        page.once('dialog', async dialog => {
+            expect(dialog.message()).toContain('Please select an amount of at least $2');
+            await dialog.accept();
+        });
         await formHelper.submitForm();
-        await formHelper.expectValidationError('Please select an amount of at least $2');
 
         // Fix amount but leave personal details empty
         await formHelper.selectDonationAmount('custom', 50);
+        page.once('dialog', async dialog => {
+            expect(dialog.message()).toContain('Please fill in all required personal details');
+            await dialog.accept();
+        });
         await formHelper.submitForm();
-        await formHelper.expectValidationError('Please fill in all required personal details');
 
         // Fill some but not all personal details
         await page.locator('#personal-details-section--first-name').fill('Recovery');
