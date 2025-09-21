@@ -83,17 +83,3 @@ export const mockReferralSources: ReferralSource[] = [
     { value: 'newsletter', label: 'Newsletter' },
     { value: 'other', label: 'Other' }
 ];
-
-export const mockCountries: string[] = [
-    'Australia',
-    'United States of America (the)',
-    'United Kingdom of Great Britain and Northern Ireland (the)',
-    'Canada',
-    'Germany',
-    'France',
-    'Netherlands (the)',
-    'New Zealand',
-    'Singapore',
-    'Japan',
-    'Other'
-];

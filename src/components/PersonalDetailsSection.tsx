@@ -1,17 +1,17 @@
 import React from 'react';
-import { mockCountries } from '../mockData';
+import { COUNTRY_LIST, Country } from '../constants/countries';
 
 interface PersonalDetailsSectionProps {
     firstName: string;
     lastName: string;
     email: string;
     postcode: string;
-    country: string;
+    country: Country;
     onFirstNameChange: (value: string) => void;
     onLastNameChange: (value: string) => void;
     onEmailChange: (value: string) => void;
     onPostcodeChange: (value: string) => void;
-    onCountryChange: (value: string) => void;
+    onCountryChange: (value: Country) => void;
 }
 
 export const PersonalDetailsSection: React.FC<PersonalDetailsSectionProps> = ({
@@ -92,10 +92,10 @@ export const PersonalDetailsSection: React.FC<PersonalDetailsSectionProps> = ({
                         id="personal-details-section--country"
                         className="eaa-select text-md flex flex-grow rounded-full border h-12 border-none p-2 focus-outline mt-1 px-4"
                         value={country}
-                        onChange={(e) => onCountryChange(e.target.value)}
+                        onChange={(e) => onCountryChange(e.target.value as Country)}
                         required
                     >
-                        {mockCountries.map(countryOption => (
+                        {COUNTRY_LIST.map(countryOption => (
                             <option key={countryOption} value={countryOption}>
                                 {countryOption}
                             </option>

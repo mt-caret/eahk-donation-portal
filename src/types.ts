@@ -1,3 +1,5 @@
+import { Country } from './constants/countries';
+
 export interface Charity {
     slug_id: string;
     name: string;
@@ -18,7 +20,7 @@ export interface FormData {
     lastName: string;
     email: string;
     postcode: string;
-    country: string;
+    country: Country;
     paymentMethod: 'credit-card' | 'bank-transfer';
     subscribeToUpdates: boolean;
     subscribeToNewsletter: boolean;
