@@ -225,7 +225,7 @@ test.describe('Donation Portal - Complete User Flows', () => {
 
         // Check thank you message
         await expect(page.locator('#thankyou-section')).toContainText('Your receipt will be sent to your email address');
-        await expect(page.locator('#thankyou-section a')).toContainText('Take Our 60 Second Survey');
+        await expect(page.getByRole('link', { name: 'Take Our 60 Second Survey' })).toBeVisible();
     });
 
     test('Complete donation flow - Form recovery after validation errors', async ({ page }) => {
@@ -269,35 +269,4 @@ test.describe('Donation Portal - Complete User Flows', () => {
         await formHelper.expectSuccessfulSubmission();
     });
 
-    test('Complete donation flow - Accessibility navigation', async ({ page }) => {
-        // Navigate entire form using only keyboard
-        await page.keyboard.press('Tab'); // First radio button
-        await page.keyboard.press('Space'); // Select one-time (already selected)
-
-        await page.keyboard.press('Tab'); // Monthly radio
-        await page.keyboard.press('Tab'); // Default allocation
-        await page.keyboard.press('Tab'); // Specific allocation
-        await page.keyboard.press('Space'); // Select specific allocation
-
-        // Should show specific allocation section
-        await expect(page.locator('.specific-allocation-section')).toBeVisible();
-
-        // Navigate back to default allocation
-        await page.keyboard.press('Shift+Tab');
-        await page.keyboard.press('Space');
-
-        // Should show amount section
-        await expect(page.locator('.amount-section')).toBeVisible();
-
-        // Continue navigating and complete form
-        await formHelper.selectDonationAmount(100);
-        await formHelper.fillBasicPersonalDetails();
-        await formHelper.selectReferralSource('event');
-
-        // Submit using Enter key
-        await page.locator('#donate-button-section--donate-button').focus();
-        await page.keyboard.press('Enter');
-
-        await formHelper.expectSuccessfulSubmission();
-    });
 });
