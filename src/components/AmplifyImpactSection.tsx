@@ -44,7 +44,7 @@ export const AmplifyImpactSection: React.FC<AmplifyImpactSectionProps> = ({
 
     return (
         <>
-            <section className="amplify-impact-section">
+            <section id="amplify-impact-section" className="amplify-impact-section">
                 <h2 className="text-lg">Support our work</h2>
                 <p>I would like to add:</p>
                 <div className="radio-group flex gap-2 flex-wrap">

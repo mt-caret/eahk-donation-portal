@@ -43,7 +43,7 @@ export const AmountSection: React.FC<AmountSectionProps> = ({
     };
 
     return (
-        <section className="amount-section">
+        <section id="amount-section" className="amount-section">
             <h2 className="text-lg mt-8">I would like to gift</h2>
             <div className="radio-group flex gap-2">
                 <input

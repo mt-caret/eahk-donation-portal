@@ -109,7 +109,7 @@ export const TotalAmountSection: React.FC<TotalAmountSectionProps> = ({
     };
 
     return (
-        <section className="total-amount-section">
+        <section id="total-amount-section" className="total-amount-section">
             {formData.allocationType === 'specific'
                 ? buildSpecificAllocationTable()
                 : buildBasicAllocationTable()

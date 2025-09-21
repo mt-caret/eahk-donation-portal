@@ -56,7 +56,7 @@ export const SpecificAllocationSection: React.FC<SpecificAllocationSectionProps>
     };
 
     return (
-        <section className="specific-allocation-section">
+        <section id="specific-allocation-section" className="specific-allocation-section">
             {Object.entries(categories).map(([categoryName, categoryCharities]) => (
                 <div key={categoryName}>
                     <h3>

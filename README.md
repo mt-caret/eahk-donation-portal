@@ -87,6 +87,52 @@ To add new features:
 3. **Update state management**: Modify `useFormState.ts` hook
 4. **Add styles**: Use the existing CSS classes or add new ones to `App.css`
 
+## Testing
+
+The project includes comprehensive end-to-end tests using Playwright that cover:
+
+- **Complete donation flows** (default and specific allocations)
+- **Form validation** (minimum amounts, required fields, email format)
+- **Interactive features** (tip calculations, popover modals, dynamic content)
+- **Accessibility** (keyboard navigation, screen reader support)
+- **Edge cases** (large amounts, special characters, network issues)
+- **Mobile responsiveness**
+
+### Running Tests
+
+```bash
+# Run all tests headlessly
+npm test
+
+# Run tests with browser UI visible
+npm run test:headed
+
+# Run tests with Playwright UI (interactive)
+npm run test:ui
+
+# Debug tests step by step
+npm run test:debug
+
+# View test reports
+npm run test:report
+```
+
+### Test Structure
+
+```
+tests/
+├── donation-flow.spec.ts      # Main user flows and basic functionality
+├── accessibility.spec.ts      # Keyboard navigation and screen reader tests
+├── edge-cases.spec.ts         # Error handling and boundary conditions
+├── complete-flows.spec.ts     # End-to-end scenarios using helpers
+└── utils/
+    └── test-helpers.ts         # Reusable test utilities and page objects
+```
+
+### Continuous Integration
+
+Tests run automatically on GitHub Actions for all pull requests and pushes to main branch.
+
 ## Building for Production
 
 ```bash
