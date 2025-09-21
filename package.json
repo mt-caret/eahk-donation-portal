@@ -5,6 +5,7 @@
   "source": "src/index.html",
   "scripts": {
     "start": "parcel",
+    "start:test": "parcel --port 60511 --no-cache --no-autoinstall",
     "build": "parcel build",
     "test": "playwright test donation-flow.spec.ts core-functionality.spec.ts",
     "test:all": "playwright test",
